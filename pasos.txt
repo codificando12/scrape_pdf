@@ -1,0 +1,4 @@
+1) Abrir  powershell
+2) escribir: C:/bookfilter
+3) verificar que estes en la carpeta C:/bookfilter/
+4) escribir: py interface.py
