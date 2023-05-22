@@ -6,6 +6,7 @@ import tkinter as tk
 import unicodedata
 import re
 
+
 def interface():
 
     def get_folder_path():
@@ -20,7 +21,7 @@ def interface():
         book_page_paragraph = []
         word = get_text()
         file_name_choosen = file_name()
-
+        
         for file in range(len(file_list)):
             
             try:
@@ -33,31 +34,45 @@ def interface():
                 continue
             
             for page_number in range(number_of_pages):
-                    
-                page = reader.pages[page_number]
-                try:
-                    text = page.extract_text()
-                    text = text.lower()
-                    text_normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
-                    # print(text)
-                    paragraphs = text_normalized.split('\n')
+
+                try:    
+                    page = reader.pages[page_number]
+                    try:
+                        text = page.extract_text()
+                        text = text.lower()
+                        text_normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+                        paragraphs = text_normalized.split(' ')
+                    except:
+                        continue
                 except:
+                    print(f"No se pudo leer las paginas en el libro '{file_list[file]}'")
                     continue
-                # print(paragraphs)
                 
-                for i in range(len(paragraphs)):
-                    details = []
+                # for i in range(len(paragraphs)):
+                #     details = []
                                         
-                    if word in paragraphs[i]:
+                #     if word in paragraphs[i]:
+                #         print(paragraphs[i], i)
+                #         details.append(f'PALABRA = {word}\n')
+                #         details.append(f'Libro {file_list[file].upper()}')
+                #         details.append(f'#####PAGINA {page_number + 1}/')
+                #         details.append(f'#####PARRAFO /{"".join(paragraphs)}/')
+                #         book_page_paragraph.append(details)
+                #         details = []
+                #         # print(book_page_paragraph)
+                #         break
+
+                for i in paragraphs:
+                    details = []
+                    if i == word:
+                        ind = paragraphs.index(word)
                         details.append(f'PALABRA = {word}\n')
-                        details.append(f'Libro {file_list[file].upper()}')
-                        details.append(f'#####PAGINA {page_number + 1}/')
-                        details.append(f'#####PARRAFO /{"".join(paragraphs)}/')
+                        details.append(f'---Libro = {file_list[file].upper()} ---')
+                        details.append(f'---PAGINA = {page_number + 1}/ ---')
+                        sentences = paragraphs[ind - 10:ind + 50]
+                        details.append(f'---\n/{" ".join(sentences)}/ ---')
                         book_page_paragraph.append(details)
                         details = []
-                        # print(book_page_paragraph)
-                        break
-               
         word_document = Document()
 
         for item in range(len(book_page_paragraph)):
