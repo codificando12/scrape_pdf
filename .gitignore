@@ -3,4 +3,7 @@ env
 main.py
 pdf_muf.py
 scrape_pdf.rar
-.docx
+*.docx
+CAMBRIDGE2.zip
+CAMBRIRDGE2
+*.pdf

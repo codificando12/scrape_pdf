@@ -9,23 +9,28 @@ import re
 
 def interface():
 
-    def get_folder_path():
-        folder_path = filedialog.askdirectory()
+    def get_folder_path(): #This funtion return the folder path to get the pdfs list
+        folder_path = filedialog.askdirectory() 
         return folder_path
     
     def start_program():
 
-        file_list = read_dir(get_folder_path())
+        pdfs_path = get_folder_path()
+        print(pdfs_path)
+        file_list = read_dir(pdfs_path)
         print(file_list)
         lenth = len(file_list)
         book_page_paragraph = []
         word = get_text()
+        compound_word = word.split(" ")
+        print(compound_word)
         file_name_choosen = file_name()
+        word_document = Document()
         
         for file in range(len(file_list)):
             
             try:
-                reader = PdfReader(f'C:/Users/eciap/Documents/GitHub/scrape_pdf/pedro_pdf/{file_list[file]}') 
+                reader = PdfReader(f'{pdfs_path}/{file_list[file]}') 
                 number_of_pages = len(reader.pages)
                 print(file_list[file])
                 print(number_of_pages)
@@ -41,7 +46,14 @@ def interface():
                         text = page.extract_text()
                         text = text.lower()
                         text_normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+                        text_normalized = text_normalized.replace("(", "( ")
+                        text_normalized = text_normalized.replace("'", "' ")
+                        text_normalized = text_normalized.replace("\"", "\" ")
+                        text_normalized = text_normalized.replace("[", "[ ")
+                        text_normalized = text_normalized.replace("{", "{ ")
                         paragraphs = text_normalized.split(' ')
+                        # print(paragraphs)
+                        
                     except:
                         continue
                 except:
@@ -61,30 +73,49 @@ def interface():
                 #         details = []
                 #         # print(book_page_paragraph)
                 #         break
-
-                for i in paragraphs:
+                
+                for i in range(len(paragraphs)):
                     details = []
-                    if i == word:
-                        ind = paragraphs.index(word)
-                        details.append(f'PALABRA = {word}\n')
-                        details.append(f'---Libro = {file_list[file].upper()} ---')
-                        details.append(f'---PAGINA = {page_number + 1}/ ---')
-                        sentences = paragraphs[ind - 10:ind + 50]
-                        details.append(f'---\n/{" ".join(sentences)}/ ---')
-                        book_page_paragraph.append(details)
-                        details = []
-        word_document = Document()
+                    if len(compound_word) > 1 and paragraphs[i].startswith(compound_word[0]) and paragraphs[i + 1].startswith(compound_word[1]):
+                            details.append(f'PALABRA = {" ".join(compound_word)}\n')
+                            details.append(f'---Libro = {file_list[file].upper()} ---')
+                            details.append(f'---PAGINA = {page_number + 1}/ ---')
+                            sentences = paragraphs[i - 50:i + 50]
+                            details.append(f'---\n/{" ".join(sentences)}/ ---')
+                            # print(details)
+                            book_page_paragraph.append(details)
+                            details = []
+                            # print(details)
+                            continue
 
-        for item in range(len(book_page_paragraph)):
-            data = book_page_paragraph[item]
-            joined_data = "".join(data)
-            normalize_data = unicodedata.normalize("NFKD", joined_data).encode("ascii", "ignore").decode("ascii")
-            clean_data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\xFF]', '', normalize_data)
-            word_document.add_paragraph(clean_data)
+                    else:
+                        if paragraphs[i].startswith(word):
+                            details.append(f'PALABRA = {word}\n')
+                            details.append(f'---Libro = {file_list[file].upper()} ---')
+                            details.append(f'---PAGINA = {page_number + 1}/ ---')
+                            sentences = paragraphs[i - 50:i + 50]
+                            details.append(f'---\n/{" ".join(sentences)}/ ---')
+                            # print(details)
+                            book_page_paragraph.append(details)
+                            details = []
+                            # print(details)
+                            continue
+                        else:
+                            continue
+        # word_document = Document()
 
-        word_document.save(f'{file_name_choosen}.docx')
+            for item in range(len(book_page_paragraph)):
+                data = book_page_paragraph[item]
+                joined_data = "".join(data)
+                normalize_data = unicodedata.normalize("NFKD", joined_data).encode("ascii", "ignore").decode("ascii")
+                clean_data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\xFF]', '', normalize_data)
+                word_document.add_paragraph(clean_data)
 
+            word_document.save(f'{file_name_choosen}.docx')
+            book_page_paragraph = []
 
+        print("Scan completed")
+    
     window = tk.Tk()
     window.geometry("400x400")
 
