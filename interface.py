@@ -18,12 +18,13 @@ def interface():
         pdfs_path = get_folder_path()
         print(pdfs_path)
         file_list = read_dir(pdfs_path)
-        print(file_list)
+        print(len(file_list))
         lenth = len(file_list)
+        print(lenth)
         book_page_paragraph = []
         word = get_text()
         compound_word = word.split(" ")
-        print(compound_word)
+        # print(compound_word)
         file_name_choosen = file_name()
         word_document = Document()
         
@@ -51,6 +52,10 @@ def interface():
                         text_normalized = text_normalized.replace("\"", "\" ")
                         text_normalized = text_normalized.replace("[", "[ ")
                         text_normalized = text_normalized.replace("{", "{ ")
+                        text_normalized = text_normalized.replace(",", " ,")
+                        text_normalized = text_normalized.replace(".", " .")
+                        text_normalized = text_normalized.replace(";", " ;")
+                        text_normalized = text_normalized.replace(":", " :")
                         paragraphs = text_normalized.split(' ')
                         # print(paragraphs)
                         
@@ -76,32 +81,49 @@ def interface():
                 
                 for i in range(len(paragraphs)):
                     details = []
-                    if len(compound_word) > 1 and paragraphs[i].startswith(compound_word[0]) and paragraphs[i + 1].startswith(compound_word[1]):
-                            details.append(f'PALABRA = {" ".join(compound_word)}\n')
-                            details.append(f'---Libro = {file_list[file].upper()} ---')
-                            details.append(f'---PAGINA = {page_number + 1}/ ---')
-                            sentences = paragraphs[i - 50:i + 50]
-                            details.append(f'---\n/{" ".join(sentences)}/ ---')
-                            # print(details)
-                            book_page_paragraph.append(details)
-                            details = []
-                            # print(details)
-                            continue
+                    if len(compound_word) == 1 and paragraphs[i].startswith(word):
+                        
+                        print(compound_word[0])
+                        details.append(f'PALABRA = {word}\n')
+                        details.append(f'---Libro = {file_list[file].upper()} ---')
+                        details.append(f'---PAGINA = {page_number + 1}/ ---')
+                        sentences = paragraphs[i - 50:i + 50]
+                        details.append(f'---\n/{" ".join(sentences)}/ ---')
+                        print(sentences)
+                        # print(details)
+                        book_page_paragraph.append(details)
+                        details = []
+                        # print(details)
 
+
+                    elif len(compound_word) > 1 and paragraphs[i].startswith(compound_word[0]) and paragraphs[i + 1].startswith(compound_word[1]):
+                        print(compound_word)
+                        details.append(f'PALABRA = {" ".join(compound_word)}\n')
+                        details.append(f'---Libro = {file_list[file].upper()} ---')
+                        details.append(f'---PAGINA = {page_number + 1}/ ---')
+                        sentences = paragraphs[i - 50:i + 50]
+                        details.append(f'---\n/{" ".join(sentences)}/ ---')
+                        book_page_paragraph.append(details)
+                        details = []
+                        print(details)
+                            
+
+                    # elif len(compound_word) == 1 and paragraphs[i].startswith(compound_word[0]):
+                        
+                    #     print(compound_word[0])
+                    #     details.append(f'PALABRA = {word}\n')
+                    #     details.append(f'---Libro = {file_list[file].upper()} ---')
+                    #     details.append(f'---PAGINA = {page_number + 1}/ ---')
+                    #     sentences = paragraphs[i - 50:i + 50]
+                    #     details.append(f'---\n/{" ".join(sentences)}/ ---')
+                    #     print(sentences)
+                    #     # print(details)
+                    #     book_page_paragraph.append(details)
+                    #     details = []
+                    #     # print(details)
+                
                     else:
-                        if paragraphs[i].startswith(word):
-                            details.append(f'PALABRA = {word}\n')
-                            details.append(f'---Libro = {file_list[file].upper()} ---')
-                            details.append(f'---PAGINA = {page_number + 1}/ ---')
-                            sentences = paragraphs[i - 50:i + 50]
-                            details.append(f'---\n/{" ".join(sentences)}/ ---')
-                            # print(details)
-                            book_page_paragraph.append(details)
-                            details = []
-                            # print(details)
-                            continue
-                        else:
-                            continue
+                        continue
         # word_document = Document()
 
             for item in range(len(book_page_paragraph)):
