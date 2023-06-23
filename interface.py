@@ -10,8 +10,17 @@ import re
 def interface():
 
     def get_folder_path(): #This funtion return the folder path to get the pdfs list
+        global folder_path
         folder_path = filedialog.askdirectory() 
-        return folder_path
+        path_label.configure(text=folder_path)
+    
+    def get_text():
+        search_word = search_box.get()
+        return search_word
+    
+    def file_name():
+        choose_file_name = file_name_box.get()
+        return choose_file_name
     
     def start_program():
 
@@ -138,30 +147,39 @@ def interface():
 
         print("Scan completed")
     
+    folder_path = "" #save the folder path that search folder path returns
     window = tk.Tk()
-    window.geometry("400x400")
+    window.geometry("600x600")
+
+    title_label = tk.Label(window, text="Search the word that you want in your PDFs files \n and get a paragraph with the results")
+    title_label.grid(row=0, column=1)
+
+    folder_label = tk.Label(window, text="Folder")
+    folder_label.grid(row=1, column=0)
+
+    path_label = tk.Label(window, bg = "White", borderwidth = 1, relief = "solid" ,width = 50)
+    path_label.grid(row = 1, column = 1,pady = 6)
+
+    browse_button = tk.Button(window, text= "Browse", command = get_folder_path)
+    browse_button.grid(row = 1, column = 2, padx = 6)
 
     search_label = tk.Label(window, text="Insert Word")
-    search_label.pack()
+    search_label.grid(row = 2, column = 0)
     search_box = tk.Entry(window)
-    search_box.pack()
+    search_box.grid(row = 3, column = 0)
 
-    def get_text():
-        search_word = search_box.get()
-        return search_word
+    
     
     file_name_label = tk.Label(window, text="Choose file name")
-    file_name_label.pack()
+    file_name_label.grid(row=4, column=0)
 
     file_name_box = tk.Entry(window)
-    file_name_box.pack()
+    file_name_box.grid(row=5, column=0)
 
-    def file_name():
-        choose_file_name = file_name_box.get()
-        return choose_file_name
+    
 
     submit_button = tk.Button(window, text="Submit", command=start_program)
-    submit_button.pack()
+    submit_button.grid(row=6, column=0)
     window.mainloop()
 
 if __name__ == '__main__':

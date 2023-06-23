@@ -13,8 +13,8 @@ def read_dir(dir_path):
         else:
             continue
 
-    print(final_files)
-    print(len(final_files))
+    # print(final_files)
+    # print(len(final_files))
     return final_files
 
 
