@@ -3,16 +3,18 @@ from read_folder import read_dir
 from docx import Document
 from tkinter import filedialog
 import tkinter as tk
+from tkinter import *
 import unicodedata
 import re
 
+counter = 0
 
 def interface():
-
+    
     def get_folder_path(): #This funtion return the folder path to get the pdfs list
         global folder_path
         folder_path = filedialog.askdirectory() 
-        path_label.configure(text=folder_path)
+        path_label.configure(text = folder_path)
     
     def get_text():
         search_word = search_box.get()
@@ -23,12 +25,15 @@ def interface():
         return choose_file_name
     
     def start_program():
-
-        pdfs_path = get_folder_path()
-        print(pdfs_path)
-        file_list = read_dir(pdfs_path)
+        global folder_path
+        global file_list
+        global counter
+        file_list = read_dir(folder_path)
         print(len(file_list))
         lenth = len(file_list)
+        counter = lenth - 1
+        file_counter_label.config(text = counter)
+        window.update()
         print(lenth)
         book_page_paragraph = []
         word = get_text()
@@ -38,9 +43,9 @@ def interface():
         word_document = Document()
         
         for file in range(len(file_list)):
-            
+
             try:
-                reader = PdfReader(f'{pdfs_path}/{file_list[file]}') 
+                reader = PdfReader(f'{folder_path}/{file_list[file]}') 
                 number_of_pages = len(reader.pages)
                 print(file_list[file])
                 print(number_of_pages)
@@ -92,13 +97,13 @@ def interface():
                     details = []
                     if len(compound_word) == 1 and paragraphs[i].startswith(word):
                         
-                        print(compound_word[0])
+                        # print(compound_word[0])
                         details.append(f'PALABRA = {word}\n')
                         details.append(f'---Libro = {file_list[file].upper()} ---')
                         details.append(f'---PAGINA = {page_number + 1}/ ---')
                         sentences = paragraphs[i - 50:i + 50]
                         details.append(f'---\n/{" ".join(sentences)}/ ---')
-                        print(sentences)
+                        # print(sentences)
                         # print(details)
                         book_page_paragraph.append(details)
                         details = []
@@ -114,7 +119,7 @@ def interface():
                         details.append(f'---\n/{" ".join(sentences)}/ ---')
                         book_page_paragraph.append(details)
                         details = []
-                        print(details)
+                        # print(details)
                             
 
                     # elif len(compound_word) == 1 and paragraphs[i].startswith(compound_word[0]):
@@ -134,7 +139,9 @@ def interface():
                     else:
                         continue
         # word_document = Document()
-
+            counter -= 1
+            file_counter_label.config(text = counter)
+            file_counter_label.update()
             for item in range(len(book_page_paragraph)):
                 data = book_page_paragraph[item]
                 joined_data = "".join(data)
@@ -148,7 +155,11 @@ def interface():
         print("Scan completed")
     
     folder_path = "" #save the folder path that search folder path returns
+
+    file_list = []
+
     window = tk.Tk()
+    window.title("PDF Scraper")
     window.geometry("600x600")
 
     title_label = tk.Label(window, text="Search the word that you want in your PDFs files \n and get a paragraph with the results")
@@ -165,21 +176,30 @@ def interface():
 
     search_label = tk.Label(window, text="Insert Word")
     search_label.grid(row = 2, column = 0)
-    search_box = tk.Entry(window)
-    search_box.grid(row = 3, column = 0)
 
-    
+    search_box = tk.Entry(window, width=58)
+    search_box.grid(row = 2, column = 1, pady = 10)
     
     file_name_label = tk.Label(window, text="Choose file name")
-    file_name_label.grid(row=4, column=0)
+    file_name_label.grid(row = 3, column=0)
 
-    file_name_box = tk.Entry(window)
-    file_name_box.grid(row=5, column=0)
+    file_name_box = tk.Entry(window, width = 58)
+    file_name_box.grid(row = 3, column = 1, pady = 10)
 
+    submit_button = tk.Button(window, text="Submit", width = 15, command=start_program)
+    submit_button.grid(row = 4, column = 1)
     
+    progres_label = tk.Label(window, text = "Sacanning")
+    progres_label.grid(row = 5, column = 0, pady = 10)
 
-    submit_button = tk.Button(window, text="Submit", command=start_program)
-    submit_button.grid(row=6, column=0)
+    file_counter_label = tk.Label(window, text = "0")
+    file_counter_label.grid(row = 5, column = 1)
+    
+    warning_label = tk.Label(window, text = "WARNING: ", fg = "Red")
+    warning_label.grid(row = 6, column = 0)
+
+    note_label = tk.Label(window, text = "Sometimes the softaware could say 'Not Responding' \n and it is because it is saving the word document. \n LEAVE IT RUNNING SPECIALLY IF THE DIRECTORY HAS A LOT OF PDFs")
+    note_label.grid(row = 6, column = 1)
     window.mainloop()
 
 if __name__ == '__main__':
