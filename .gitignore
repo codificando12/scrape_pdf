@@ -9,3 +9,4 @@ CAMBRIRDGE2
 *.pdf
 dist
 build
+interface.spec
