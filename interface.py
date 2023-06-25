@@ -6,8 +6,11 @@ import tkinter as tk
 from tkinter import *
 import unicodedata
 import re
+import os
 
 counter = 0
+
+save_folder_path = ""
 
 def interface():
     
@@ -15,6 +18,11 @@ def interface():
         global folder_path
         folder_path = filedialog.askdirectory() 
         path_label.configure(text = folder_path)
+
+    def save_file_path():
+        global save_folder_path
+        save_folder_path = filedialog.askdirectory()
+        save_path_label.configure(text = save_folder_path) #this will save the folder path in a label
     
     def get_text():
         search_word = search_box.get()
@@ -149,7 +157,8 @@ def interface():
                 clean_data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\xFF]', '', normalize_data)
                 word_document.add_paragraph(clean_data)
 
-            word_document.save(f'{file_name_choosen}.docx')
+            save_path = os.path.join(save_folder_path, f"{file_name_choosen}.docx")
+            word_document.save(save_path)
             book_page_paragraph = []
 
         print("Scan completed")
@@ -157,6 +166,8 @@ def interface():
     folder_path = "" #save the folder path that search folder path returns
 
     file_list = []
+
+    
 
     window = tk.Tk()
     window.title("PDF Scraper")
@@ -186,20 +197,29 @@ def interface():
     file_name_box = tk.Entry(window, width = 58)
     file_name_box.grid(row = 3, column = 1, pady = 10)
 
+    save_folder_label = tk.Label(window, text = "Save Folder")
+    save_folder_label.grid(row = 4, column = 0)
+
+    save_path_label = Label(window, bg="White", width=50)
+    save_path_label.grid(row = 4, column = 1)
+
+    browse_button = Button(window, text="Browse", command=save_file_path)
+    browse_button.grid(row = 4, column = 2, padx = 6)
+
     submit_button = tk.Button(window, text="Submit", width = 15, command=start_program)
-    submit_button.grid(row = 4, column = 1)
+    submit_button.grid(row = 5, column = 1)
     
     progres_label = tk.Label(window, text = "Sacanning")
-    progres_label.grid(row = 5, column = 0, pady = 10)
+    progres_label.grid(row = 6, column = 0, pady = 10)
 
     file_counter_label = tk.Label(window, text = "0")
-    file_counter_label.grid(row = 5, column = 1)
+    file_counter_label.grid(row = 6, column = 1)
     
     warning_label = tk.Label(window, text = "WARNING: ", fg = "Red")
     warning_label.grid(row = 6, column = 0)
 
     note_label = tk.Label(window, text = "Sometimes the softaware could say 'Not Responding' \n and it is because it is saving the word document. \n LEAVE IT RUNNING SPECIALLY IF THE DIRECTORY HAS A LOT OF PDFs")
-    note_label.grid(row = 6, column = 1)
+    note_label.grid(row = 7, column = 1)
     window.mainloop()
 
 if __name__ == '__main__':
