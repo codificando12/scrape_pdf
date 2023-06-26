@@ -10,6 +10,8 @@ import os
 
 counter = 0
 
+folder_path = "" #save the folder path that search folder path returns
+
 save_folder_path = ""
 
 def interface():
@@ -49,7 +51,12 @@ def interface():
         # print(compound_word)
         file_name_choosen = file_name()
         word_document = Document()
-        
+        word_document.add_paragraph(f'Word = {" ".join(compound_word)}\n')
+
+        submit_button.configure(state = tk.DISABLED)
+        browse_button.configure(state = tk.DISABLED)
+        save_browse_button.configure(state = tk.DISABLED)
+
         for file in range(len(file_list)):
 
             try:
@@ -106,9 +113,8 @@ def interface():
                     if len(compound_word) == 1 and paragraphs[i].startswith(word):
                         
                         # print(compound_word[0])
-                        details.append(f'PALABRA = {word}\n')
-                        details.append(f'---Libro = {file_list[file].upper()} ---')
-                        details.append(f'---PAGINA = {page_number + 1}/ ---')
+                        details.append(f'---Title = {file_list[file].upper()} ---')
+                        details.append(f'---p.{page_number + 1}/ ---')
                         sentences = paragraphs[i - 50:i + 50]
                         details.append(f'---\n/{" ".join(sentences)}/ ---')
                         # print(sentences)
@@ -120,9 +126,8 @@ def interface():
 
                     elif len(compound_word) > 1 and paragraphs[i].startswith(compound_word[0]) and paragraphs[i + 1].startswith(compound_word[1]):
                         print(compound_word)
-                        details.append(f'PALABRA = {" ".join(compound_word)}\n')
-                        details.append(f'---Libro = {file_list[file].upper()} ---')
-                        details.append(f'---PAGINA = {page_number + 1}/ ---')
+                        details.append(f'---Title = {file_list[file].upper()} ---')
+                        details.append(f'---p.{page_number + 1}/ ---')
                         sentences = paragraphs[i - 50:i + 50]
                         details.append(f'---\n/{" ".join(sentences)}/ ---')
                         book_page_paragraph.append(details)
@@ -162,12 +167,11 @@ def interface():
             book_page_paragraph = []
 
         print("Scan completed")
-    
-    folder_path = "" #save the folder path that search folder path returns
+        submit_button.configure(state = tk.NORMAL)
+        browse_button.configure(state = tk.NORMAL)
+        save_browse_button.configure(state = tk.NORMAL)
 
     file_list = []
-
-    
 
     window = tk.Tk()
     window.title("PDF Scraper")
@@ -203,10 +207,11 @@ def interface():
     save_path_label = Label(window, bg="White", width=50)
     save_path_label.grid(row = 4, column = 1)
 
-    browse_button = Button(window, text="Browse", command=save_file_path)
-    browse_button.grid(row = 4, column = 2, padx = 6)
+    save_browse_button = Button(window, text="Browse", command = save_file_path)
+    save_browse_button.grid(row = 4, column = 2, padx = 6)
 
-    submit_button = tk.Button(window, text="Submit", width = 15, command=start_program)
+  
+    submit_button = tk.Button(window, text="Submit", width = 15, command = start_program)
     submit_button.grid(row = 5, column = 1)
     
     progres_label = tk.Label(window, text = "Sacanning")
@@ -216,7 +221,7 @@ def interface():
     file_counter_label.grid(row = 6, column = 1)
     
     warning_label = tk.Label(window, text = "WARNING: ", fg = "Red")
-    warning_label.grid(row = 6, column = 0)
+    warning_label.grid(row = 7, column = 0)
 
     note_label = tk.Label(window, text = "Sometimes the softaware could say 'Not Responding' \n and it is because it is saving the word document. \n LEAVE IT RUNNING SPECIALLY IF THE DIRECTORY HAS A LOT OF PDFs")
     note_label.grid(row = 7, column = 1)
