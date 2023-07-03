@@ -38,10 +38,11 @@ def interface():
         global folder_path
         global file_list
         global counter
+        text_area.delete("1.0", END)
         file_list = read_dir(folder_path)
         print(len(file_list))
         lenth = len(file_list)
-        counter = lenth - 1
+        counter = lenth
         file_counter_label.config(text = counter)
         window.update()
         print(lenth)
@@ -63,9 +64,14 @@ def interface():
                 reader = PdfReader(f'{folder_path}/{file_list[file]}') 
                 number_of_pages = len(reader.pages)
                 print(file_list[file])
+                text_area.insert(INSERT, f'{file_list[file]},\nTotal pages: {number_of_pages} \n ---------\n')
+                text_area.see(END)
                 print(number_of_pages)
             except:
-                print(f"Error al procesar el archivo '{file_list[file]}'. La propiedad no está presente en el objeto o tiene un valor nulo.")
+                print(f" {file_list[file]}. La propiedad no está presente en el objeto o tiene un valor nulo.")
+                error_text_area.insert(INSERT, f'The book "{file_list[file]}" couldn\'t be opened.\n ---------\n')
+                error_text_area.see(END)
+                # text_area.uptdate()
                 continue
             
             for page_number in range(number_of_pages):
@@ -92,6 +98,8 @@ def interface():
                         continue
                 except:
                     print(f"No se pudo leer las paginas en el libro '{file_list[file]}'")
+                    error_text_area.insert(INSERT, f'The pages of "{file_list[file]}" couldn\'t be readed.\n --------- \n')
+                    error_text_area.see(END)
                     continue
                 
                 # for i in range(len(paragraphs)):
@@ -113,7 +121,7 @@ def interface():
                     if len(compound_word) == 1 and paragraphs[i].startswith(word):
                         
                         # print(compound_word[0])
-                        details.append(f'---Title = {file_list[file].upper()} ---')
+                        details.append(f'---{file_list[file].upper()} ---')
                         details.append(f'---p.{page_number + 1}/ ---')
                         sentences = paragraphs[i - 50:i + 50]
                         details.append(f'---\n/{" ".join(sentences)}/ ---')
@@ -167,6 +175,7 @@ def interface():
             book_page_paragraph = []
 
         print("Scan completed")
+        text_area.insert(INSERT, "Scan Completed")
         submit_button.configure(state = tk.NORMAL)
         browse_button.configure(state = tk.NORMAL)
         save_browse_button.configure(state = tk.NORMAL)
@@ -175,7 +184,7 @@ def interface():
 
     window = tk.Tk()
     window.title("PDF Scraper")
-    window.geometry("600x600")
+    window.geometry("1050x600")
 
     title_label = tk.Label(window, text="Search the word that you want in your PDFs files \n and get a paragraph with the results")
     title_label.grid(row=0, column=1)
@@ -220,11 +229,36 @@ def interface():
     file_counter_label = tk.Label(window, text = "0")
     file_counter_label.grid(row = 6, column = 1)
     
+    scaning_label = tk.Label(window, text = "Scanning files")
+    scaning_label.grid(row = 7, column = 1)
+
+    text_area = tk.Text(window, height = 20)
+    text_area.grid(row = 8, column = 0, columnspan = 3, padx= 17)
+
+    scrollbar_scanned_books = Scrollbar(window, orient= VERTICAL, relief=SUNKEN,)
+    scrollbar_scanned_books.grid(row = 8, column = 4, sticky= N+S)
+
+    text_area.config(yscrollcommand = scrollbar_scanned_books.set)
+    scrollbar_scanned_books.config(command = text_area.yview)
+
+    books_error_label = tk.Label(window, text = "Files that could't be read")
+    books_error_label.grid(row = 0, column = 5)
+
+    error_text_area = tk.Text(window, width= 50, height= 40, fg= "Red")
+    error_text_area.grid(row = 1, rowspan= 9, column = 5, padx = 10)
+
+    scrollbar_error_books = Scrollbar(window, orient= VERTICAL, relief=SUNKEN,)
+    scrollbar_error_books.grid(row = 1, rowspan = 9, column = 6, sticky= N+S)
+
+    error_text_area.config(yscrollcommand = scrollbar_error_books.set)
+    scrollbar_error_books.config(command = error_text_area.yview)
+
     warning_label = tk.Label(window, text = "WARNING: ", fg = "Red")
-    warning_label.grid(row = 7, column = 0)
+    warning_label.grid(row = 9, column = 0)
 
     note_label = tk.Label(window, text = "Sometimes the softaware could say 'Not Responding' \n and it is because it is saving the word document. \n LEAVE IT RUNNING SPECIALLY IF THE DIRECTORY HAS A LOT OF PDFs")
-    note_label.grid(row = 7, column = 1)
+    note_label.grid(row = 9, column = 1)
+
     window.mainloop()
 
 if __name__ == '__main__':
