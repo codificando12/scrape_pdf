@@ -98,65 +98,21 @@ def interface():
                         continue
                 except:
                     print(f"No se pudo leer las paginas en el libro '{file_list[file]}'")
-                    error_text_area.insert(INSERT, f'The pages of "{file_list[file]}" couldn\'t be readed.\n --------- \n')
-                    error_text_area.see(END)
+                    pages_error_text_area.insert(INSERT, f'The pages of "{file_list[file]}" couldn\'t be readed.\n --------- \n')
+                    pages_error_text_area.see(END)
                     continue
-                
-                # for i in range(len(paragraphs)):
-                #     details = []
-                                        
-                #     if word in paragraphs[i]:
-                #         print(paragraphs[i], i)
-                #         details.append(f'PALABRA = {word}\n')
-                #         details.append(f'Libro {file_list[file].upper()}')
-                #         details.append(f'#####PAGINA {page_number + 1}/')
-                #         details.append(f'#####PARRAFO /{"".join(paragraphs)}/')
-                #         book_page_paragraph.append(details)
-                #         details = []
-                #         # print(book_page_paragraph)
-                #         break
                 
                 for i in range(len(paragraphs)):
                     details = []
-                    if len(compound_word) == 1 and paragraphs[i].startswith(word):
-                        
-                        # print(compound_word[0])
+                    count = 0
+                    if all(paragraphs[i + j].startswith(compound_word[j]) for j in range(len(compound_word))):
                         details.append(f'---{file_list[file].upper()} ---')
                         details.append(f'---p.{page_number + 1}/ ---')
                         sentences = paragraphs[i - 50:i + 50]
                         details.append(f'---\n/{" ".join(sentences)}/ ---')
-                        # print(sentences)
-                        # print(details)
                         book_page_paragraph.append(details)
                         details = []
-                        # print(details)
-
-
-                    elif len(compound_word) > 1 and paragraphs[i].startswith(compound_word[0]) and paragraphs[i + 1].startswith(compound_word[1]):
-                        print(compound_word)
-                        details.append(f'---Title = {file_list[file].upper()} ---')
-                        details.append(f'---p.{page_number + 1}/ ---')
-                        sentences = paragraphs[i - 50:i + 50]
-                        details.append(f'---\n/{" ".join(sentences)}/ ---')
-                        book_page_paragraph.append(details)
-                        details = []
-                        # print(details)
-                            
-
-                    # elif len(compound_word) == 1 and paragraphs[i].startswith(compound_word[0]):
-                        
-                    #     print(compound_word[0])
-                    #     details.append(f'PALABRA = {word}\n')
-                    #     details.append(f'---Libro = {file_list[file].upper()} ---')
-                    #     details.append(f'---PAGINA = {page_number + 1}/ ---')
-                    #     sentences = paragraphs[i - 50:i + 50]
-                    #     details.append(f'---\n/{" ".join(sentences)}/ ---')
-                    #     print(sentences)
-                    #     # print(details)
-                    #     book_page_paragraph.append(details)
-                    #     details = []
-                    #     # print(details)
-                
+                        count += 1          
                     else:
                         continue
         # word_document = Document()
@@ -184,7 +140,7 @@ def interface():
 
     window = tk.Tk()
     window.title("PDF Scraper")
-    window.geometry("1050x600")
+    window.geometry("1050x800")
 
     title_label = tk.Label(window, text="Search the word that you want in your PDFs files \n and get a paragraph with the results")
     title_label.grid(row=0, column=1)
@@ -198,7 +154,7 @@ def interface():
     browse_button = tk.Button(window, text= "Browse", command = get_folder_path)
     browse_button.grid(row = 1, column = 2, padx = 6)
 
-    search_label = tk.Label(window, text="Insert Word")
+    search_label = tk.Label(window, text="Search Word")
     search_label.grid(row = 2, column = 0)
 
     search_box = tk.Entry(window, width=58)
@@ -223,7 +179,7 @@ def interface():
     submit_button = tk.Button(window, text="Submit", width = 15, command = start_program)
     submit_button.grid(row = 5, column = 1)
     
-    progres_label = tk.Label(window, text = "Sacanning")
+    progres_label = tk.Label(window, text = "Files to Scan")
     progres_label.grid(row = 6, column = 0, pady = 10)
 
     file_counter_label = tk.Label(window, text = "0")
@@ -244,14 +200,26 @@ def interface():
     books_error_label = tk.Label(window, text = "Files that could't be read")
     books_error_label.grid(row = 0, column = 5)
 
-    error_text_area = tk.Text(window, width= 50, height= 40, fg= "Red")
-    error_text_area.grid(row = 1, rowspan= 9, column = 5, padx = 10)
+    error_text_area = tk.Text(window, width= 50, height= 20, fg= "Red")
+    error_text_area.grid(row = 1, rowspan= 4, column = 5, padx = 10)
 
     scrollbar_error_books = Scrollbar(window, orient= VERTICAL, relief=SUNKEN,)
-    scrollbar_error_books.grid(row = 1, rowspan = 9, column = 6, sticky= N+S)
+    scrollbar_error_books.grid(row = 1, rowspan = 4, column = 6, sticky= N+S)
 
     error_text_area.config(yscrollcommand = scrollbar_error_books.set)
     scrollbar_error_books.config(command = error_text_area.yview)
+
+    pages_error_label = tk.Label(window, text = "Pages that could't be read")
+    pages_error_label.grid(row = 6, column = 5)
+
+    pages_error_text_area = tk.Text(window, width= 50, height= 20, fg= "Red")
+    pages_error_text_area.grid(row = 6, rowspan= 9, column = 5, padx = 10)
+
+    scrollbar_error_pages = Scrollbar(window, orient= VERTICAL, relief=SUNKEN,)
+    scrollbar_error_pages.grid(row = 8, column = 6, sticky= N+S)
+
+    pages_error_text_area.config(yscrollcommand = scrollbar_error_pages.set)
+    scrollbar_error_pages.config(command = pages_error_text_area.yview)
 
     warning_label = tk.Label(window, text = "WARNING: ", fg = "Red")
     warning_label.grid(row = 9, column = 0)
