@@ -28,7 +28,8 @@ def interface():
     
     def get_text():
         search_word = search_box.get()
-        return search_word
+        word_normalized = unicodedata.normalize("NFKD", search_word).encode("ascii", "ignore").decode("ascii")
+        return word_normalized
     
     def file_name():
         choose_file_name = file_name_box.get()
@@ -105,7 +106,18 @@ def interface():
                 for i in range(len(paragraphs)):
                     details = []
                     count = 0
-                    if all(paragraphs[i + j].startswith(compound_word[j]) for j in range(len(compound_word))):
+                    if len(compound_word) == 1 and paragraphs[i].startswith(word):
+                        details.append(f'---{file_list[file].upper()} ---')
+                        details.append(f'---p.{page_number + 1}/ ---')
+                        sentences = paragraphs[i - 50:i + 50]
+                        details.append(f'---\n/{" ".join(sentences)}/ ---')
+                        # print(sentences)
+                        # print(details)
+                        book_page_paragraph.append(details)
+                        details = []
+                        # print(details)
+                    elif i + len(compound_word) <= len(paragraphs) and all(paragraphs[i + j].startswith(compound_word[j]) for j in range(len(compound_word))): 
+                        
                         details.append(f'---{file_list[file].upper()} ---')
                         details.append(f'---p.{page_number + 1}/ ---')
                         sentences = paragraphs[i - 50:i + 50]
@@ -131,7 +143,10 @@ def interface():
             book_page_paragraph = []
 
         print("Scan completed")
+        counter = 0
         text_area.insert(INSERT, "Scan Completed")
+        file_counter_label.config(text = counter)
+        window.update()
         submit_button.configure(state = tk.NORMAL)
         browse_button.configure(state = tk.NORMAL)
         save_browse_button.configure(state = tk.NORMAL)
@@ -139,13 +154,13 @@ def interface():
     file_list = []
 
     window = tk.Tk()
-    window.title("PDF Scraper")
+    window.title("Ciappi PDF Scraper")
     window.geometry("1050x800")
 
     title_label = tk.Label(window, text="Search the word that you want in your PDFs files \n and get a paragraph with the results")
     title_label.grid(row=0, column=1)
 
-    folder_label = tk.Label(window, text="Folder")
+    folder_label = tk.Label(window, text="Select PDF \nFolder")
     folder_label.grid(row=1, column=0)
 
     path_label = tk.Label(window, bg = "White", borderwidth = 1, relief = "solid" ,width = 50)
@@ -154,19 +169,19 @@ def interface():
     browse_button = tk.Button(window, text= "Browse", command = get_folder_path)
     browse_button.grid(row = 1, column = 2, padx = 6)
 
-    search_label = tk.Label(window, text="Search Word")
+    search_label = tk.Label(window, text="Insert Word to Search \n(No Brackets)")
     search_label.grid(row = 2, column = 0)
 
     search_box = tk.Entry(window, width=58)
     search_box.grid(row = 2, column = 1, pady = 10)
     
-    file_name_label = tk.Label(window, text="Choose file name")
+    file_name_label = tk.Label(window, text="Choose File Result Name")
     file_name_label.grid(row = 3, column=0)
 
     file_name_box = tk.Entry(window, width = 58)
     file_name_box.grid(row = 3, column = 1, pady = 10)
 
-    save_folder_label = tk.Label(window, text = "Save Folder")
+    save_folder_label = tk.Label(window, text = "Save in Folder")
     save_folder_label.grid(row = 4, column = 0)
 
     save_path_label = Label(window, bg="White", width=50)
