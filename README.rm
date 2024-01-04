@@ -1,0 +1,21 @@
+<h1> Ciappi PDF Scraper</h1>
+<p>Welcome to my Ciappi PDF Scraper, this is a software </br>
+developed in Python, you can run it straigh from the console </br>
+or you can download the <strong>ciappiPDFScraper.exe</strong> file.</br>
+This sofware was developed for a writer whoi writes books about China.</p>
+
+<h2>Things to consider</h2>
+<ol>
+<li> It will save the results in a word file (.docx)</li>
+<li> The result will have 100 words, and the keyword will be in the middle</li>
+<li>The software takes a while, and it can be stuck, but actually it is running,</br>
+    so, don't be impaient</li>
+<li>It will not read every pdf and if it is a pdf with design (like magazines), the results will not be </br>
+accurate</li>
+<li> It works quite well with books in PDF format </li>
+</ol>
+
+<h5> If you find it usefull and you would like to contact me</h5>
+<ul>
+<li> X: @EmiCiappi</li>
+<li> LinkedIn: https://www.linkedin.com/in/emilio-ciappi/</li>
