@@ -1,25 +1,18 @@
-<html>
-<h1> Ciappi PDF Scraper</h1>
-<p>Welcome to my Ciappi PDF Scraper, this is a software </br>
-developed in Python, you can run it straigh from the console </br>
-or you can download the <strong>ciappiPDFScraper.exe</strong> file.</br>
-This sofware was developed for a writer who writes books about China.</p>
+# Ciappi PDF Scraper
 
-<h2>For persona use</h2>
+Welcome to my Ciappi PDF Scraper, this is software developed in Python. You can run it straight from the console or you can download the **ciappiPDFScraper.exe** file. This software was developed for a writer who writes books about China.
 
-<p> You can download the file or the code and use it free </p>
+## For Personal Use
 
-<h3>Things to consider</h3>
-<ol>
-<li> It will save the results in a word file (.docx)</li>
-<li> The result will have 100 words, and the keyword will be in the middle</li>
-<li>The software takes a while, and it can be stuck, but actually it is running,</br>
-    so, don't be impaient</li>
-<li>It will not read every pdf and if it is a pdf with design (like magazines), the results will not be </br>
-accurate</li>
-<li> It works quite well with books in PDF format </li>
-</ol>
-</html>
+You can download the file or the code and use it for free.
+
+### Things to Consider
+
+- It will save the results in a Word file (.docx).
+- The result will have 100 words, and the keyword will be in the middle.
+- The software takes a while, and it can appear stuck, but actually, it is running, so, don't be impatient.
+- It will not read every PDF, and if it is a PDF with design (like magazines), the results will not be accurate.
+- It works quite well with books in PDF format.
 
 <h2>For institutions/companies</h2>
 You have to ask for permision to use.
