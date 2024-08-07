@@ -25,16 +25,19 @@ def interface():
         global save_folder_path
         save_folder_path = filedialog.askdirectory()
         save_path_label.configure(text = save_folder_path) #this will save the folder path in a label
-    
+
+    # this function will get the keyword and proccess to be easy to look for it
     def get_text():
         search_word = search_box.get()
         word_normalized = unicodedata.normalize("NFKD", search_word).encode("ascii", "ignore").decode("ascii")
         return word_normalized
-    
+
+    #this one will get the file name
     def file_name():
         choose_file_name = file_name_box.get()
         return choose_file_name
-    
+
+    #this one will start the program
     def start_program():
         global folder_path
         global file_list
